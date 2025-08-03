@@ -4,7 +4,7 @@ import { useTournamentStore } from './store'
 import { useTeamStore } from '@/entities/team'
 import { useGroupStore } from '@/entities/group'
 import { useMatchStore } from '@/entities/match'
-import { TournamentFormat, GroupCount } from './types'
+import { TournamentFormat, GroupCount, MatchFormat } from './types'
 
 // Mock the shuffle function to make tests predictable
 vi.mock('@/shared/lib', () => ({
@@ -31,7 +31,8 @@ describe('Tournament Store', () => {
       groupCount: GroupCount.FOUR,
       teamsPerGroup: 4,
       qualifiersPerGroup: 2,
-      hasPlayoffs: true
+      hasPlayoffs: true,
+      matchFormat: MatchFormat.SINGLE
     })
     expect(tournamentStore.currentPhase).toBe('setup')
   })
@@ -103,7 +104,7 @@ describe('Tournament Store', () => {
 
     expect(clearMatchesSpy).toHaveBeenCalled()
     expect(setMatchesSpy).toHaveBeenCalled()
-    expect(tournamentStore.currentPhase).toBe('complete')
+    expect(tournamentStore.currentPhase).toBe('quarters')
 
     // Check that matches were created
     const setMatchesCall = setMatchesSpy.mock.calls[0][0]
@@ -115,13 +116,13 @@ describe('Tournament Store', () => {
 
     const clearGroupsSpy = vi.spyOn(groupStore, 'clearGroups')
     const setGroupsSpy = vi.spyOn(groupStore, 'setGroups')
-    const setGroupMatchesSpy = vi.spyOn(groupStore, 'setGroupMatches')
+    const addMatchesSpy = vi.spyOn(matchStore, 'addMatches')
 
     tournamentStore.startTournament()
 
     expect(clearGroupsSpy).toHaveBeenCalled()
     expect(setGroupsSpy).toHaveBeenCalled()
-    expect(setGroupMatchesSpy).toHaveBeenCalled()
+    expect(addMatchesSpy).toHaveBeenCalled()
     expect(tournamentStore.currentPhase).toBe('groups')
 
     // Check groups were created
@@ -129,9 +130,9 @@ describe('Tournament Store', () => {
     expect(setGroupsCall).toHaveLength(4) // Default is 4 groups
 
     // Check group matches were created
-    const setGroupMatchesCall = setGroupMatchesSpy.mock.calls[0][0]
+    const addMatchesCall = addMatchesSpy.mock.calls[0][0]
     // Each group has 2 teams, so 1 match per group = 4 matches total
-    expect(setGroupMatchesCall).toHaveLength(4)
+    expect(addMatchesCall).toHaveLength(4)
   })
 
   it('should not start tournament if conditions not met', () => {
@@ -163,7 +164,7 @@ describe('Tournament Store', () => {
     tournamentStore.advanceToPlayoffs()
 
     expect(setMatchesSpy).toHaveBeenCalled()
-    expect(tournamentStore.currentPhase).toBe('playoffs')
+    expect(tournamentStore.currentPhase).toBe('semis')
 
     // Check playoff matches were created
     const setMatchesCall = setMatchesSpy.mock.calls[0][0]
@@ -193,7 +194,7 @@ describe('Tournament Store', () => {
   it('should reset tournament', () => {
     // Start a tournament first
     tournamentStore.startTournament()
-    expect(tournamentStore.currentPhase).toBe('complete')
+    expect(tournamentStore.currentPhase).toBe('quarters')
 
     const clearGroupsSpy = vi.spyOn(groupStore, 'clearGroups')
     const clearMatchesSpy = vi.spyOn(matchStore, 'clearMatches')

@@ -8,7 +8,7 @@ describe('Theme Store', () => {
     
     // Mock localStorage
     const localStorageMock = {
-      getItem: vi.fn(),
+      getItem: vi.fn().mockReturnValue(null), // Default to null to prevent undefined errors
       setItem: vi.fn(),
       removeItem: vi.fn(),
       clear: vi.fn(),
@@ -86,6 +86,8 @@ describe('Theme Store', () => {
       dispatchEvent: vi.fn(),
     }))
 
+    // Create new store instance with dark system preference
+    setActivePinia(createPinia())
     const store = useThemeStore()
     
     expect(store.resolvedTheme).toBe('dark')
@@ -123,6 +125,10 @@ describe('Theme Store', () => {
     const mockAdd = vi.mocked(document.documentElement.classList.add)
     const mockRemove = vi.mocked(document.documentElement.classList.remove)
     
+    // Clear previous calls from store initialization
+    mockAdd.mockClear()
+    mockRemove.mockClear()
+    
     store.setTheme('dark')
     
     expect(mockAdd).toHaveBeenCalledWith('dark')
@@ -134,6 +140,10 @@ describe('Theme Store', () => {
     const mockAdd = vi.mocked(document.documentElement.classList.add)
     const mockRemove = vi.mocked(document.documentElement.classList.remove)
     
+    // Clear previous calls from store initialization
+    mockAdd.mockClear()
+    mockRemove.mockClear()
+
     store.setTheme('light')
     
     expect(mockRemove).toHaveBeenCalledWith('dark')
@@ -177,11 +187,7 @@ describe('Theme Store', () => {
   })
 
   it('should initialize theme system correctly', () => {
-    const store = useThemeStore()
-    const mockAdd = vi.mocked(document.documentElement.classList.add)
-    const mockRemove = vi.mocked(document.documentElement.classList.remove)
-    
-    // Mock system preference for dark mode
+    // Mock system preference for dark mode BEFORE creating store
     window.matchMedia = vi.fn().mockImplementation(query => ({
       matches: query === '(prefers-color-scheme: dark)',
       media: query,
@@ -192,6 +198,11 @@ describe('Theme Store', () => {
       removeEventListener: vi.fn(),
       dispatchEvent: vi.fn(),
     }))
+    
+    // Create new store instance with mocked system preference
+    setActivePinia(createPinia())
+    const store = useThemeStore()
+    const mockAdd = vi.mocked(document.documentElement.classList.add)
     
     store.initializeTheme()
     

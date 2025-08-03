@@ -74,20 +74,23 @@ describe('LocalStorageManager', () => {
   })
 
   it('should clear all data with prefix', () => {
-    const mockStorage = {
-      'football-draw-key1': 'value1',
-      'football-draw-key2': 'value2',
-      'other-key': 'value3'
-    }
+    const mockKeys = [
+      'football-draw-key1',
+      'football-draw-key2', 
+      'other-key'
+    ]
     
     // Mock Object.keys to return our mock keys
-    vi.spyOn(Object, 'keys').mockReturnValue(Object.keys(mockStorage))
+    const objectKeysSpy = vi.spyOn(Object, 'keys').mockReturnValue(mockKeys)
     
     storageManager.clear()
     
     expect(localStorage.removeItem).toHaveBeenCalledWith('football-draw-key1')
     expect(localStorage.removeItem).toHaveBeenCalledWith('football-draw-key2')
     expect(localStorage.removeItem).not.toHaveBeenCalledWith('other-key')
+    
+    // Restore Object.keys spy
+    objectKeysSpy.mockRestore()
   })
 
   it('should check if key exists', () => {
@@ -108,28 +111,34 @@ describe('LocalStorageManager', () => {
   })
 
   it('should list all keys with prefix', () => {
-    const mockStorage = {
-      'football-draw-teams': 'value1',
-      'football-draw-matches': 'value2',
-      'other-key': 'value3',
-      'football-draw-settings': 'value4'
-    }
+    const mockKeys = [
+      'football-draw-teams',
+      'football-draw-matches',
+      'other-key',
+      'football-draw-settings'
+    ]
     
-    // Mock Object.keys to return our mock keys
-    vi.spyOn(Object, 'keys').mockReturnValue(Object.keys(mockStorage))
+    // Mock Object.keys for localStorage to return our mock keys
+    const objectKeysSpy = vi.spyOn(Object, 'keys').mockReturnValue(mockKeys)
     
     const keys = storageManager.getAllKeys()
     
     expect(keys).toEqual(['teams', 'matches', 'settings'])
+    
+    // Restore Object.keys spy
+    objectKeysSpy.mockRestore()
   })
 
   it('should handle empty storage when listing keys', () => {
     // Mock Object.keys to return empty array
-    vi.spyOn(Object, 'keys').mockReturnValue([])
+    const objectKeysSpy = vi.spyOn(Object, 'keys').mockReturnValue([])
     
     const keys = storageManager.getAllKeys()
     
     expect(keys).toEqual([])
+    
+    // Restore Object.keys spy
+    objectKeysSpy.mockRestore()
   })
 
   it('should handle localStorage errors gracefully', () => {

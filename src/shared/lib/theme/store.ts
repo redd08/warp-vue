@@ -8,15 +8,20 @@ export const useThemeStore = defineStore('theme', () => {
   const storage = LocalStorageManager.getInstance()
   
   // Load theme from localStorage or default to light
-  let savedTheme: Theme = 'light'
-  try {
-    const loaded = storage.load('theme') as Theme
-    if (loaded && ['light', 'dark', 'system'].includes(loaded)) {
-      savedTheme = loaded
+  let savedTheme: Theme = 'system'
+  const loadTheme = () => {
+    try {
+      const loaded = storage.load('theme') as Theme
+      if (loaded && ['light', 'dark', 'system'].includes(loaded)) {
+        return loaded
+      }
+    } catch (error) {
+      console.error('Failed to load theme from storage:', error)
     }
-  } catch (error) {
-    console.error('Failed to load theme from storage:', error)
+    return 'system'
   }
+
+  savedTheme = loadTheme()
   
   const currentTheme = ref<Theme>(savedTheme)
   
