@@ -11,10 +11,10 @@ describe('Manual Draw Store', () => {
   let matchStore: ReturnType<typeof useMatchStore>
 
   const testTeams: Team[] = [
-    { id: '1', name: 'Team A' },
-    { id: '2', name: 'Team B' },
-    { id: '3', name: 'Team C' },
-    { id: '4', name: 'Team D' }
+    { id: 1, name: 'Team A', country: 'Country A', rating: 80 },
+    { id: 2, name: 'Team B', country: 'Country B', rating: 80 },
+    { id: 3, name: 'Team C', country: 'Country C', rating: 80 },
+    { id: 4, name: 'Team D', country: 'Country D', rating: 80 }
   ]
 
   beforeEach(() => {
@@ -63,7 +63,7 @@ describe('Manual Draw Store', () => {
 
     // Should have 2 teams left
     expect(manualDrawStore.availableTeams).toHaveLength(2)
-    expect(manualDrawStore.availableTeams.map(t => t.id)).toEqual(['3', '4'])
+    expect(manualDrawStore.availableTeams.map(t => t.id)).toEqual([3, 4])
   })
 
   it('should add match slot', () => {
