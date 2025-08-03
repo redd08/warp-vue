@@ -2,6 +2,8 @@
 
 A modern football tournament draw application built with Vue 3, TypeScript, Tailwind CSS, and Pinia, organized using Feature-Sliced Design (FSD) architecture.
 
+> 🤖 **Built with AI**: This application was developed using [Claude Sonnet](https://www.anthropic.com/claude) through [Warp.dev](https://warp.dev) - The Agentic Development Environment.
+
 ## Tech Stack
 
 - **Vue 3** - Progressive JavaScript framework
@@ -131,4 +133,18 @@ Start the development server with `npm run dev` and visit `http://localhost:5173
 5. **Reset**: Click "Reset" to clear the draw and start over
 
 The app comes with 8 pre-loaded European football teams to get you started!
+
+## Development Credits
+
+🤖 **AI-Powered Development**: This entire application was crafted using **Claude Sonnet** AI assistant through [**Warp.dev**](https://warp.dev) - The Agentic Development Environment.
+
+### About the Development Process:
+- **AI Assistant**: [Claude Sonnet](https://www.anthropic.com/claude) by Anthropic
+- **Development Environment**: [Warp.dev](https://warp.dev) - The fastest way to build with AI agents
+- **Architecture**: Feature-Sliced Design methodology
+- **Code Quality**: 100% test coverage with comprehensive test suites
+- **CI/CD**: Automated testing and deployment via GitHub Actions
+
+Warp's agentic development environment enabled rapid prototyping, clean architecture implementation, and comprehensive testing - showcasing the future of AI-assisted software development.
+
 GitHub Actions Test - Sun Aug  3 20:26:10 MSK 2025
