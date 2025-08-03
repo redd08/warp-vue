@@ -45,6 +45,36 @@
         </div>
       </div>
 
+      <!-- Match Format Selection -->
+      <div>
+        <label class="block text-sm font-medium text-white mb-2">Match Format</label>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div
+            v-for="option in MATCH_FORMAT_OPTIONS"
+            :key="option.value"
+            class="relative p-4 border-2 rounded-lg cursor-pointer transition-all"
+            :class="settings.matchFormat === option.value
+              ? 'border-purple-500 bg-purple-900/20'
+              : 'border-gray-600 bg-gray-800/50 hover:border-gray-500'"
+            @click="updateMatchFormat(option.value)"
+          >
+            <div class="flex items-center space-x-2">
+              <input
+                type="radio"
+                :checked="settings.matchFormat === option.value"
+                class="text-purple-500"
+                readonly
+              />
+              <span class="font-semibold text-white">{{ option.label }}</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">{{ option.description }}</p>
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 mt-2">
+          💡 Note: {{ getMatchFormatNote() }}
+        </p>
+      </div>
+
       <!-- Group Stage Settings -->
       <div v-if="settings.format === TournamentFormat.GROUP_STAGE" class="space-y-4">
         <div>
@@ -147,35 +177,6 @@
         </Button>
       </div>
 
-      <!-- Match Format Selection -->
-      <div>
-        <label class="block text-sm font-medium text-white mb-2">Match Format</label>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div
-            v-for="option in MATCH_FORMAT_OPTIONS"
-            :key="option.value"
-            class="relative p-4 border-2 rounded-lg cursor-pointer transition-all"
-            :class="settings.matchFormat === option.value
-              ? 'border-purple-500 bg-purple-900/20'
-              : 'border-gray-600 bg-gray-800/50 hover:border-gray-500'"
-            @click="updateMatchFormat(option.value)"
-          >
-            <div class="flex items-center space-x-2">
-              <input
-                type="radio"
-                :checked="settings.matchFormat === option.value"
-                class="text-purple-500"
-                readonly
-              />
-              <span class="font-semibold text-white">{{ option.label }}</span>
-            </div>
-            <p class="text-xs text-gray-400 mt-2">{{ option.description }}</p>
-          </div>
-        </div>
-        <p class="text-xs text-gray-400 mt-2">
-          💡 Note: {{ getMatchFormatNote() }}
-        </p>
-      </div>
 
       <!-- Start Tournament -->
       <div class="text-center">
