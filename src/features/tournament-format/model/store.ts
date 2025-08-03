@@ -372,26 +372,26 @@ export const useTournamentStore = defineStore('tournament', () => {
         if (matches.length === 2) {
           const [leg1, leg2] = matches
           
-          // Calculate aggregate scores
-          let team1Aggregate = 0
-          let team2Aggregate = 0
+          // Get the two teams involved in this tie
+          // In leg1: team1 vs team2
+          // In leg2: team2 vs team1 (teams are swapped)
+          const teamA = leg1.team1
+          const teamB = leg1.team2
           
-          // Find which team is which across both legs
-          const team1 = leg1.team1
-          const team2 = leg1.team2
+          // Calculate aggregate scores for each team
+          let teamAAggregate = 0
+          let teamBAggregate = 0
           
-          matches.forEach(match => {
-            if (match.team1.id === team1.id) {
-              team1Aggregate += match.team1Score!
-              team2Aggregate += match.team2Score!
-            } else {
-              team1Aggregate += match.team2Score!
-              team2Aggregate += match.team1Score!
-            }
-          })
+          // Leg 1: teamA (team1) vs teamB (team2)
+          teamAAggregate += leg1.team1Score!
+          teamBAggregate += leg1.team2Score!
           
-          // Determine winner based on aggregate
-          const winner = team1Aggregate > team2Aggregate ? team1 : team2
+          // Leg 2: teamB (team1) vs teamA (team2) - teams are swapped
+          teamBAggregate += leg2.team1Score!
+          teamAAggregate += leg2.team2Score!
+          
+          // Determine winner based on aggregate score
+          const winner = teamAAggregate > teamBAggregate ? teamA : teamB
           winners.push(winner)
         }
       })
