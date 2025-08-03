@@ -1,0 +1,37 @@
+{
+  "name": "smart-football-draw",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "test:entities": "vitest run src/entities",
+    "test:features": "vitest run src/features",
+    "test:shared": "vitest run src/shared"
+  },
+  "dependencies": {
+    "pinia": "^3.0.3",
+    "vue": "^3.5.17"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.4.0",
+    "vitest": "^0.34.0",
+    "@vitest/coverage-v8": "^0.34.0",
+    "@vitest/ui": "^0.34.0",
+    "jsdom": "^22.0.0",
+    "@vitejs/plugin-vue": "^4.6.2",
+    "@vue/tsconfig": "^0.7.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.8.3",
+    "vite": "^4.5.14",
+    "vue-tsc": "^1.8.27"
+  }
+}
