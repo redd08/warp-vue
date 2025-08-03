@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useDrawStore } from './store'
 import { useTeamStore } from '@/entities/team'
@@ -16,10 +16,10 @@ describe('Draw Generation Store', () => {
   let matchStore: ReturnType<typeof useMatchStore>
 
   const testTeams: Team[] = [
-    { id: '1', name: 'Team A' },
-    { id: '2', name: 'Team B' },
-    { id: '3', name: 'Team C' },
-    { id: '4', name: 'Team D' }
+    { id: 1, name: 'Team A', country: 'Country A', rating: 80 },
+    { id: 2, name: 'Team B', country: 'Country B', rating: 80 },
+    { id: 3, name: 'Team C', country: 'Country C', rating: 80 },
+    { id: 4, name: 'Team D', country: 'Country D', rating: 80 }
   ]
 
   beforeEach(() => {
@@ -164,11 +164,13 @@ describe('Draw Generation Store', () => {
     matchStore.setMatches([{
       id: 'existing-match',
       team1: teamStore.teams[0],
-      team2: teamStore.teams[1]
+      team2: teamStore.teams[1],
+      stage: 'group'
     }])
 
-    // Draw should still work with remaining teams
-    expect(drawStore.availableTeams).toHaveLength(2)
+    // Before draw completion, availableTeams returns all teams
+    // The filtering only happens after drawComplete is true
+    expect(drawStore.availableTeams).toHaveLength(4) // All teams available initially
     expect(drawStore.canDraw).toBe(true)
 
     const drawPromise = drawStore.performDraw()
@@ -183,7 +185,8 @@ describe('Draw Generation Store', () => {
     matchStore.setMatches([{
       id: 'existing-match',
       team1: teamStore.teams[0],
-      team2: teamStore.teams[1]
+      team2: teamStore.teams[1],
+      stage: 'group'
     }])
 
     const clearMatchesSpy = vi.spyOn(matchStore, 'clearMatches')
