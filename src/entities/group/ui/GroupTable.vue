@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gradient-to-r from-gray-900/50 to-gray-800/50 rounded-lg border border-gray-700 p-4">
+  <div class="bg-gradient-to-r from-gray-900/50 to-gray-800/50 rounded-lg border border-gray-700 p-4 w-full h-fit">
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-lg font-bold text-white">{{ group.name }}</h3>
       <div class="text-xs text-gray-400">
@@ -8,7 +8,7 @@
     </div>
 
     <div class="overflow-x-auto">
-      <table class="w-full text-sm">
+      <table class="w-full text-sm min-w-full">
         <thead>
           <tr class="text-xs text-gray-400 border-b border-gray-600">
             <th class="text-left p-2">Pos</th>

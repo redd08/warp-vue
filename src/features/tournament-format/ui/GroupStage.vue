@@ -18,7 +18,7 @@
     </div>
 
     <!-- Groups Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div class="grid gap-6 w-full" :class="getGroupGridClasses">
       <GroupTable
         v-for="group in groupStore.groups"
         :key="group.id"
@@ -141,6 +141,20 @@ const hasCompletedMatches = computed(() => {
 
 const qualifiedTeams = computed(() => {
   return groupStore.getQualifiedTeams(tournamentStore.settings.qualifiersPerGroup)
+})
+
+const getGroupGridClasses = computed(() => {
+  const groupCount = groupStore.groups.length
+  
+  if (groupCount === 1) {
+    return 'grid-cols-1 max-w-2xl mx-auto'
+  } else if (groupCount === 2) {
+    return 'grid-cols-1 lg:grid-cols-2'
+  } else if (groupCount === 4) {
+    return 'grid-cols-1 md:grid-cols-2 2xl:grid-cols-4'
+  } else {
+    return 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'
+  }
 })
 
 const randomizeAllMatches = () => {

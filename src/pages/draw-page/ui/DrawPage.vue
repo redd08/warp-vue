@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-black py-8 px-4 text-gray-800 dark:text-gray-200 transition-colors duration-300">
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-7xl mx-auto">
       <!-- Header -->
       <div class="text-center mb-12 relative">
         <!-- Theme Toggle -->
