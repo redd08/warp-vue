@@ -7,10 +7,10 @@ import type { Team } from '@/entities/team'
 describe('Match Store', () => {
   let store: ReturnType<typeof useMatchStore>
   
-  const team1: Team = { id: '1', name: 'Team A' }
-  const team2: Team = { id: '2', name: 'Team B' }
-  const team3: Team = { id: '3', name: 'Team C' }
-  const team4: Team = { id: '4', name: 'Team D' }
+  const team1: Team = { id: 1, name: 'Team A', country: 'Country A', rating: 80 }
+  const team2: Team = { id: 2, name: 'Team B', country: 'Country B', rating: 80 }
+  const team3: Team = { id: 3, name: 'Team C', country: 'Country C', rating: 80 }
+  const team4: Team = { id: 4, name: 'Team D', country: 'Country D', rating: 80 }
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -27,13 +27,13 @@ describe('Match Store', () => {
         id: 'match-1',
         team1,
         team2,
-        round: 'Round 1'
+        stage: 'group'
       },
       {
         id: 'match-2',
         team1: team3,
         team2: team4,
-        round: 'Round 1'
+        stage: 'group'
       }
     ]
 
@@ -48,7 +48,8 @@ describe('Match Store', () => {
       {
         id: 'match-1',
         team1,
-        team2
+        team2,
+        stage: 'group'
       }
     ]
 
@@ -65,13 +66,13 @@ describe('Match Store', () => {
         id: 'match-1',
         team1,
         team2,
-        round: 'Final'
+        stage: 'final'
       },
       {
         id: 'match-2',
         team1: team3,
         team2: team4,
-        round: 'Semi-final'
+        stage: 'semis'
       }
     ]
 
@@ -82,7 +83,7 @@ describe('Match Store', () => {
       id: 'match-1',
       team1,
       team2,
-      round: 'Final'
+      stage: 'final'
     })
   })
 
@@ -91,7 +92,8 @@ describe('Match Store', () => {
       {
         id: 'match-1',
         team1,
-        team2
+        team2,
+        stage: 'group'
       }
     ]
 
@@ -106,7 +108,8 @@ describe('Match Store', () => {
       {
         id: 'match-1',
         team1,
-        team2
+        team2,
+        stage: 'group'
       }
     ]
 
@@ -114,12 +117,14 @@ describe('Match Store', () => {
       {
         id: 'match-2',
         team1: team3,
-        team2: team4
+        team2: team4,
+        stage: 'quarters'
       },
       {
         id: 'match-3',
         team1,
-        team2: team3
+        team2: team3,
+        stage: 'quarters'
       }
     ]
 
@@ -137,17 +142,22 @@ describe('Match Store', () => {
       {
         id: 'match-1',
         team1,
-        team2
+        team2,
+        stage: 'group'
       }
     ]
 
     store.setMatches(matches)
 
-    // This should not be allowed in TypeScript, but let's test the behavior
-    expect(() => {
-      // @ts-expect-error - Testing readonly behavior
-      store.matches.push({ id: 'invalid', team1, team2 })
-    }).toThrow()
+    // Vue's readonly wrapper prevents mutations but doesn't throw errors
+    // It just logs warnings and the mutation is ignored
+    const initialLength = store.matches.length
+
+    // @ts-expect-error - Testing readonly behavior
+    store.matches.push({ id: 'invalid', team1, team2, stage: 'group' })
+
+    // The array should remain unchanged
+    expect(store.matches).toHaveLength(initialLength)
   })
 
   it('should handle empty matches array', () => {

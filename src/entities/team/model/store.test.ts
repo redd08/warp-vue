@@ -42,7 +42,7 @@ describe('Team Store', () => {
     store.addTeam('Test Team', 'Test Country', 80)
     
     const newTeam = store.teams[store.teams.length - 1]
-    expect(newTeam.id).toBe(8) // Should still be max + 1, not filling the gap
+    expect(newTeam.id).toBe(9) // Should be max + 1 (8 + 1), not filling the gap
   })
 
   it('should remove a team by ID', () => {
@@ -102,10 +102,14 @@ describe('Team Store', () => {
   it('should maintain readonly teams reference', () => {
     const store = useTeamStore()
     
-    // This should not be allowed in TypeScript, but let's test the behavior
-    expect(() => {
-      // @ts-expect-error - Testing readonly behavior
-      store.teams.push({ id: 999, name: 'Test', country: 'Test', rating: 0 })
-    }).toThrow()
+    // Vue's readonly wrapper prevents mutations but doesn't throw errors
+    // It just logs warnings and the mutation is ignored
+    const initialLength = store.teams.length
+    
+    // @ts-expect-error - Testing readonly behavior
+    store.teams.push({ id: 999, name: 'Test', country: 'Test', rating: 0 })
+    
+    // The array should remain unchanged
+    expect(store.teams).toHaveLength(initialLength)
   })
 })
