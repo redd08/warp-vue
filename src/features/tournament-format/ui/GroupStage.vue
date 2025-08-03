@@ -52,7 +52,7 @@
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <MatchCard
-          v-for="match in groupMatches"
+          v-for="match in sortedMatchesByTours"
           :key="match.id"
           :match="match"
         />
@@ -112,6 +112,10 @@ const tournamentStore = useTournamentStore()
 // Get group stage matches from unified match store
 const groupMatches = computed(() => {
   return matchStore.getMatchesByStage('group')
+})
+
+const sortedMatchesByTours = computed(() => {
+  return groupMatches.value.slice().sort((a, b) => a.stageOrder - b.stageOrder)
 })
 
 const completedMatches = computed(() => {

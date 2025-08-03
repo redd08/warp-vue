@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useTeamStore } from './store'
 
@@ -100,6 +100,9 @@ describe('Team Store', () => {
   })
 
   it('should maintain readonly teams reference', () => {
+    // Mock console.warn to suppress expected Vue warning
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    
     const store = useTeamStore()
     
     // Vue's readonly wrapper prevents mutations but doesn't throw errors
@@ -111,5 +114,11 @@ describe('Team Store', () => {
     
     // The array should remain unchanged
     expect(store.teams).toHaveLength(initialLength)
+    
+    // Verify Vue warning was called (readonly protection is working)
+    expect(consoleWarnSpy).toHaveBeenCalled()
+    
+    // Restore console.warn
+    consoleWarnSpy.mockRestore()
   })
 })

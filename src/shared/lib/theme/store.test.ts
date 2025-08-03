@@ -163,6 +163,9 @@ describe('Theme Store', () => {
   })
 
   it('should handle invalid localStorage data gracefully', () => {
+    // Mock console.error to suppress expected error output
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    
     const mockGetItem = vi.mocked(localStorage.getItem)
     mockGetItem.mockReturnValue('invalid-json')
     
@@ -172,6 +175,15 @@ describe('Theme Store', () => {
     
     // Should fallback to system theme
     expect(store.currentTheme).toBe('system')
+    
+    // Ensure the error was logged
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Failed to load data from localStorage for key "theme":',
+      expect.any(SyntaxError)
+    )
+    
+    // Restore console.error
+    consoleErrorSpy.mockRestore()
   })
 
   it('should handle missing localStorage gracefully', () => {

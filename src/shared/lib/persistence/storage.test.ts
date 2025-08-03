@@ -60,11 +60,21 @@ describe('LocalStorageManager', () => {
   })
 
   it('should handle JSON parse errors', () => {
+    // Mock console.error to suppress expected error output
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    
     vi.mocked(localStorage.getItem).mockReturnValue('invalid-json')
     
     const result = storageManager.load('invalid-key')
     
     expect(result).toBeNull()
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Failed to load data from localStorage for key "invalid-key":',
+      expect.any(SyntaxError)
+    )
+    
+    // Restore console.error
+    consoleErrorSpy.mockRestore()
   })
 
   it('should remove data from storage', () => {
@@ -142,6 +152,9 @@ describe('LocalStorageManager', () => {
   })
 
   it('should handle localStorage errors gracefully', () => {
+    // Mock console.error to suppress expected error output
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    
     vi.mocked(localStorage.setItem).mockImplementation(() => {
       throw new Error('Storage quota exceeded')
     })
@@ -149,5 +162,12 @@ describe('LocalStorageManager', () => {
     const result = storageManager.save('test-key', { data: 'test' })
     
     expect(result).toBe(false)
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Failed to save data to localStorage for key "test-key":',
+      expect.any(Error)
+    )
+    
+    // Restore console.error
+    consoleErrorSpy.mockRestore()
   })
 })

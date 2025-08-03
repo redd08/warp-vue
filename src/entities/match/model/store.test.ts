@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useMatchStore } from './store'
 import type { Match } from './types'
@@ -138,6 +138,9 @@ describe('Match Store', () => {
   })
 
   it('should maintain readonly matches reference', () => {
+    // Mock console.warn to suppress expected Vue warning
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    
     const matches: Match[] = [
       {
         id: 'match-1',
@@ -158,6 +161,12 @@ describe('Match Store', () => {
 
     // The array should remain unchanged
     expect(store.matches).toHaveLength(initialLength)
+    
+    // Verify Vue warning was called (readonly protection is working)
+    expect(consoleWarnSpy).toHaveBeenCalled()
+    
+    // Restore console.warn
+    consoleWarnSpy.mockRestore()
   })
 
   it('should handle empty matches array', () => {
