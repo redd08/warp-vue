@@ -103,6 +103,12 @@ describe('Tournament Store', () => {
     tournamentStore.startTournament()
 
     expect(clearMatchesSpy).toHaveBeenCalled()
+    // setMatches should NOT be called immediately for direct knockout
+    expect(setMatchesSpy).not.toHaveBeenCalled()
+    expect(tournamentStore.currentPhase).toBe('direct')
+
+    // Now call generateDirectKnockout to create matches
+    tournamentStore.generateDirectKnockout()
     expect(setMatchesSpy).toHaveBeenCalled()
     expect(tournamentStore.currentPhase).toBe('quarters')
 
@@ -194,6 +200,10 @@ describe('Tournament Store', () => {
   it('should reset tournament', () => {
     // Start a tournament first
     tournamentStore.startTournament()
+    expect(tournamentStore.currentPhase).toBe('direct')
+    
+    // Generate matches
+    tournamentStore.generateDirectKnockout()
     expect(tournamentStore.currentPhase).toBe('quarters')
 
     const clearGroupsSpy = vi.spyOn(groupStore, 'clearGroups')
@@ -255,6 +265,10 @@ describe('Tournament Store', () => {
     const setMatchesSpy = vi.spyOn(matchStore, 'setMatches')
     
     tournamentStore.startTournament()
+    expect(tournamentStore.currentPhase).toBe('direct')
+    
+    // Generate matches
+    tournamentStore.generateDirectKnockout()
     
     // Get the generated matches
     const generatedMatches = setMatchesSpy.mock.calls[0][0]

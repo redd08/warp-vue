@@ -132,7 +132,9 @@ export const useTournamentStore = defineStore('tournament', () => {
     matchStore.clearMatches()
 
     if (settings.value.format === TournamentFormat.DIRECT_KNOCKOUT) {
-      generateDirectKnockout()
+      // For direct knockout, transition to 'direct' phase but don't auto-generate matches
+      // This allows users to choose between random draw or manual draw
+      currentPhase.value = 'direct'
     } else {
       generateGroupStage()
     }
@@ -463,6 +465,7 @@ export const useTournamentStore = defineStore('tournament', () => {
     recommendedSettings,
     updateSettings,
     startTournament,
+    generateDirectKnockout,
     advanceToPlayoffs,
     advanceToNextStage,
     resetTournament,

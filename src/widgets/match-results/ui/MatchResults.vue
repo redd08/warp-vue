@@ -26,13 +26,13 @@
         </Button>
       </div>
 
-      <!-- Legacy Draw Controls for Direct Knockout -->
-      <div v-if="tournamentStore.settings.format === 'direct-knockout' && tournamentStore.currentPhase === 'complete'">
+      <!-- Draw Controls for Direct Knockout -->
+      <div v-if="tournamentStore.settings.format === 'direct-knockout' && matchStore.matches.length === 0">
         <DrawControls
           :is-drawing="drawStore.isDrawing"
           :draw-complete="drawStore.drawComplete || manualDrawStore.isManualMode"
           :can-draw="drawStore.canDraw"
-          @start="drawStore.performDraw"
+          @start="tournamentStore.generateDirectKnockout"
           @start-manual="manualDrawStore.startManualDraw"
           @reset="handleReset"
         />
