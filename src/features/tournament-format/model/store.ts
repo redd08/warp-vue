@@ -373,6 +373,16 @@ export const useTournamentStore = defineStore('tournament', () => {
       matchPairs.forEach(matches => {
         if (matches.length === 2) {
           const [leg1, leg2] = matches
+
+          // Ensure scores are present for both legs
+          if (
+            typeof leg1.team1Score !== 'number' ||
+            typeof leg1.team2Score !== 'number' ||
+            typeof leg2.team1Score !== 'number' ||
+            typeof leg2.team2Score !== 'number'
+          ) {
+            return
+          }
           
           // Get the two teams involved in this tie
           // In leg1: team1 vs team2
@@ -381,28 +391,34 @@ export const useTournamentStore = defineStore('tournament', () => {
           const teamB = leg1.team2
           
           // Calculate aggregate scores for each team
-          let teamAAggregate = 0
-          let teamBAggregate = 0
+          const teamAAggregate = leg1.team1Score + leg2.team2Score
+          const teamBAggregate = leg1.team2Score + leg2.team1Score
           
-          // Leg 1: teamA (team1) vs teamB (team2)
-          teamAAggregate += leg1.team1Score!
-          teamBAggregate += leg1.team2Score!
-          
-          // Leg 2: teamB (team1) vs teamA (team2) - teams are swapped
-          teamBAggregate += leg2.team1Score!
-          teamAAggregate += leg2.team2Score!
-          
-          // Determine winner based on aggregate score
-          const winner = teamAAggregate > teamBAggregate ? teamA : teamB
-          winners.push(winner)
+          // Determine winner based on aggregate score; if tied, do not pick a winner
+          if (teamAAggregate > teamBAggregate) {
+            winners.push(teamA)
+          } else if (teamBAggregate > teamAAggregate) {
+            winners.push(teamB)
+          }
         }
       })
+
+      // If any tie remains unresolved (aggregate draw), do not advance yet
+      if (winners.length !== matchPairs.size) {
+        return
+      }
     } else {
       // Single match format - simple winner determination
       winners = completedMatches.map(match => {
         if (typeof match.team1Score !== 'number' || typeof match.team2Score !== 'number') return null
+        if (match.team1Score === match.team2Score) return null
         return match.team1Score > match.team2Score ? match.team1 : match.team2
       }).filter(Boolean) as Team[]
+
+      // If any draw exists, do not advance yet
+      if (winners.length !== completedMatches.length) {
+        return
+      }
     }
 
     if (winners.length < 2) {
